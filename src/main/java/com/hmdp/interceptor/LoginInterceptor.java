@@ -13,13 +13,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.xml.ws.handler.Handler;
+
 
 public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if(UserHolder.getUser() == null) {
+            System.out.println("Unauthorized!");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
