@@ -3,8 +3,10 @@ package com.hmdp.controller;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hmdp.dto.Result;
+import com.hmdp.utils.AliOssUtil;
 import com.hmdp.utils.SystemConstants;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,19 +18,28 @@ import java.util.UUID;
 @RestController
 @RequestMapping("upload")
 public class UploadController {
-
+    @Autowired
+    AliOssUtil aliOssUtil;
     @PostMapping("blog")
     public Result uploadImage(@RequestParam("file") MultipartFile image) {
         try {
             // 获取原始文件名称
             String originalFilename = image.getOriginalFilename();
             // 生成新文件名
-            String fileName = createNewFileName(originalFilename);
+            //String fileName = createNewFileName(originalFilename);
+
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+
+            String objectName = UUID.randomUUID().toString() + extension;
+
+            String filePath = aliOssUtil.upload(image.getBytes(), objectName);
+            log.debug("文件上传成功，{}", filePath);
+
+            return Result.ok(filePath);
             // 保存文件
-            image.transferTo(new File(SystemConstants.IMAGE_UPLOAD_DIR, fileName));
+//            image.transferTo(new File(SystemConstants.IMAGE_UPLOAD_DIR, fileName));
             // 返回结果
-            log.debug("文件上传成功，{}", fileName);
-            return Result.ok(fileName);
+
         } catch (IOException e) {
             throw new RuntimeException("文件上传失败", e);
         }

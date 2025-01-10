@@ -26,4 +26,8 @@ public class TestRedis {
         shopService.saveShop2Redis(1L,20L);
     }
 
+    @Test
+    void testThread(){
+//      System.out.println(Thread.currentThread().get);
+    }
 }
