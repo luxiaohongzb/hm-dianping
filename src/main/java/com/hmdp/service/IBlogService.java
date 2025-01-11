@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @since 2021-12-22
  */
 public interface IBlogService extends IService<Blog> {
-    Result queryBlogById(@PathVariable Integer id);
+    Result queryBlogById( Long id);
 
     Result likeBlog(Long id);
+
+    Result queryBlogLikes(Long id);
 }
